@@ -24,3 +24,25 @@ class User(UserMixin,db.Model):
     comment = db.relationship('Comment', backref = 'user', lazy = 'dynamic')
     upvotes = db.relationship('Upvote', backref = 'user', lazy = 'dynamic')
     downvotes = db.relationship('Downvote', backref = 'user', lazy = 'dynamic')
+
+@classmethod
+    def get_pitches(cls, id):
+        pitches = Pitch.query.order_by(pitch_id=id).desc().all()
+        return pitches
+
+    def __repr__(self):
+        return f'Pitch {self.description}'
+
+    
+
+class Comment(db.Model):
+    __tablename__='comments'
+    
+    id = db.Column(db.Integer,primary_key=True)
+    pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable= False)
+    description = db.Column(db.Text)
+
+    
+    def __repr__(self):
+        return f"Comment : id: {self.id} comment: {self.description}"
